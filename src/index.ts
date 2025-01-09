@@ -9,6 +9,7 @@ import {
   SIGNING_KEY,
   CHAIN_ID,
   STORAGE_PATH,
+  MASP_URL,
 } from "./config";
 
 export const submitBond = async (): Promise<void> => {
@@ -17,21 +18,25 @@ export const submitBond = async (): Promise<void> => {
     feeAmount: BigNumber(5),
     gasLimit: BigNumber(20_000),
     chainId: CHAIN_ID,
+    // Update this to a valid public key
     publicKey:
       "tpknam1qzz3nvg5zjwdpk5z0x9ngkf7guv9qpqrtz0da7weenwl5766pkkgvvt689t",
   };
   const bondProps: BondProps = {
+    // Update this to a valid source that has balance
     source: "tnam1qqshvryx9pngpk7mmzpzkjkm6klelgusuvmkc0uz",
+    // Update this to a valid validator address
     validator: "tnam1qz4sdx5jlh909j44uz46pf29ty0ztftfzc98s8dx",
     amount: BigNumber(100),
   };
 
   try {
     const { cryptoMemory } = await init();
+
     const sdk = getSdk(
       cryptoMemory,
       NODE_URL,
-      "masp_indexer_url",
+      MASP_URL,
       STORAGE_PATH,
       NATIVE_TOKEN,
     );
@@ -63,6 +68,7 @@ export const submitBond = async (): Promise<void> => {
     const balance = await sdk.rpc.queryBalance(
       "tnam1qz4sdx5jlh909j44uz46pf29ty0ztftfzc98s8dx",
       [NATIVE_TOKEN],
+      CHAIN_ID,
     );
     console.log("Balance:", balance);
   } catch (error) {
