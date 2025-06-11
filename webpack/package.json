@@ -19,7 +19,7 @@
     "webpack-dev-server": "^5.0.3"
   },
   "dependencies": {
-    "@namada/sdk": "^0.14.0",
+    "@namada/sdk-multicore": "../../namada-sdkjs/dist",
     "@namada/types": "^0.3.0",
     "buffer": "^6.0.3",
     "typescript": "^5.6.3"

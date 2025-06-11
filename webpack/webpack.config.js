@@ -17,6 +17,12 @@ module.exports = {
           configFile: path.join(__dirname, "tsconfig.json"),
         },
       },
+      {
+        test: /\.m?js/, // fix:issue: https://github.com/webpack/webpack/issues/11467
+        resolve: {
+          fullySpecified: false,
+        },
+      },
     ],
   },
   resolve: {
@@ -25,20 +31,18 @@ module.exports = {
     fallback: {
       buffer: require.resolve("buffer"),
     },
-    alias: {
-      "../package.json": path.resolve(
-        __dirname,
-        "./node_modules/@namada/sdk/package.json",
-      ),
-    },
   },
   devServer: {
-    static: [
-      path.join(__dirname, "public"),
-      path.join(__dirname, ".", "node_modules", "@namada", "sdk", "dist"),
-    ],
+    static: [path.join(__dirname, "public")],
     compress: true,
     port: 9000,
+    // Only required for multicore build, to support multicore worker helpers
+    headers: {
+      "Cross-Origin-Embedder-Policy": "require-corp",
+      "Cross-Origin-Opener-Policy": "same-origin",
+      "Cross-Origin-Resource-Policy": "same-site",
+      "Cross-Origin-Resource-Policy": "cross-origin",
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -53,4 +57,8 @@ module.exports = {
       },
     }),
   ],
+  stats: {
+    // We want to ignore wasm-bindgen-rayon circular dependency warning
+    warningsFilter: [/dependency between chunks.+wasm-bindgen-rayon/],
+  },
 };
