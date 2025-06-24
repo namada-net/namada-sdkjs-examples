@@ -1,5 +1,5 @@
-import { initSdk } from "@namada/sdk-multicore/inline";
-import { Sdk } from "@namada/sdk-multicore";
+import { initSdk } from "@namada/sdk/inline";
+import { Sdk } from "@namada/sdk";
 
 const initializeSdk = async (): Promise<Sdk> => {
   const rpcUrl = "https://rpc.campfire.tududes.com";
