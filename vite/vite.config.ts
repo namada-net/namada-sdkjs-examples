@@ -12,16 +12,25 @@ export default defineConfig({
   plugins: [react(), nodePolyfills()],
   worker: {
     format: "es",
-    // rollupOptions: {
-    //   output: {
-    //     preserveModules: true,
-    //   },
-    // },
   },
   esbuild: {
     minifyIdentifiers: false,
   },
   optimizeDeps: {
-    exclude: ["workerHelpers.js"],
+    exclude: ["@namada/sdk-multicore"],
+    include: [
+      "@protobufjs/float",
+      "@protobufjs/inquire",
+      "@protobufjs/pool",
+      "@protobufjs/utf8",
+      "@zondax/ledger-namada",
+      "semver",
+    ],
+    esbuildOptions: {
+      // Node.js global to browser globalThis
+      define: {
+        global: "globalThis",
+      },
+    },
   },
 });

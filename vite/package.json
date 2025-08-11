@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@namada/sdk-multicore": "file:../../../Downloads/namada-sdk-multicore-0.20.0.tgz",
+    "@namada/sdk-multicore": "file:namada-sdk-multicore-0.20.0-kappa.tgz",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
