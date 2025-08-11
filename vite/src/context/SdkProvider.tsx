@@ -1,4 +1,4 @@
-import type { Sdk } from "@namada/sdk";
+import type { Sdk } from "@namada/sdk-multicore";
 import {
   useEffect,
   useState,

@@ -1,10 +1,10 @@
-import { initSdk } from "@namada/sdk/inline";
-import { Sdk } from "@namada/sdk";
+import { initSdk } from "@namada/sdk-multicore/inline";
+import { Sdk } from "@namada/sdk-multicore";
 
 const initializeSdk = async (): Promise<Sdk> => {
-  const rpcUrl = "https://rpc.campfire.tududes.com";
-  const token = "tnam1qy440ynh9fwrx8aewjvvmu38zxqgukgc259fzp6h";
-  const maspIndexerUrl = "https://masp.campfire.tududes.com";
+  const rpcUrl = "https://rpc.housefire.tududes.com";
+  const token = "tnam1q9gr66cvu4hrzm0sd5kmlnjje82gs3xlfg3v6nu7";
+  const maspIndexerUrl = "https://masp.housefire.tududes.com";
   const dbName = "testDb";
 
   const sdk = await initSdk({ rpcUrl, token, maspIndexerUrl, dbName });

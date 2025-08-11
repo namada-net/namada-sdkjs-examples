@@ -1,4 +1,4 @@
-import { Sdk } from "@namada/sdk";
+import { Sdk } from "@namada/sdk-multicore";
 import { createContext } from "react";
 
 type SdkContext = {
