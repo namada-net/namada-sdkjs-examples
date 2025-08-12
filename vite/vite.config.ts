@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import react from "@vitejs/plugin-react";
+import path from "path";
 
 export default defineConfig({
   server: {
@@ -17,16 +18,30 @@ export default defineConfig({
     minifyIdentifiers: false,
   },
   optimizeDeps: {
-    exclude: ["@namada/sdk-multicore"],
-    include: [
-      "@protobufjs/float",
-      "@protobufjs/inquire",
-      "@protobufjs/pool",
-      "@protobufjs/utf8",
-      "@zondax/ledger-namada",
-      "semver",
-    ],
     esbuildOptions: {
+      plugins: [
+        {
+          name: "worker-helpers",
+          setup(build) {
+            build.onResolve({ filter: /.*/ }, (args) => {
+              if (
+                args.importer.includes("@namada/sdk-multicore/wasm/src/sdk")
+              ) {
+                const importerDir = path.dirname(args.importer);
+                const absolutePath = path.resolve(importerDir, args.path);
+
+                if (args.path === "../../..") {
+                  // Special case for the root path
+                  return { path: `${absolutePath}/index.js`, external: true };
+                }
+
+                return { path: absolutePath, external: true };
+              }
+              return null;
+            });
+          },
+        },
+      ],
       // Node.js global to browser globalThis
       define: {
         global: "globalThis",
