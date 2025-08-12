@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import react from "@vitejs/plugin-react";
-import path from "path";
+import { sdkMulticoreWorkerHelpers } from "@namada/sdkjs-esbuild-plugin";
 
 export default defineConfig({
   server: {
@@ -19,27 +19,8 @@ export default defineConfig({
   },
   optimizeDeps: {
     esbuildOptions: {
-      plugins: [
-        {
-          name: "worker-helpers",
-          setup(build) {
-            build.onResolve(
-              { filter: /@namada\/sdk-multicore\/wasm\/src\/sdk"/ },
-              (args) => {
-                const importerDir = path.dirname(args.importer);
-                const absolutePath = path.resolve(importerDir, args.path);
-
-                if (args.path === "../../..") {
-                  // Special case for the root path
-                  return { path: `${absolutePath}/index.js`, external: true };
-                }
-
-                return { path: absolutePath, external: true };
-              },
-            );
-          },
-        },
-      ],
+      // Need to use the custom plugin to handle the SDK multicore worker helpers
+      plugins: [sdkMulticoreWorkerHelpers()],
       // Node.js global to browser globalThis
       define: {
         global: "globalThis",
