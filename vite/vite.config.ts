@@ -23,10 +23,9 @@ export default defineConfig({
         {
           name: "worker-helpers",
           setup(build) {
-            build.onResolve({ filter: /.*/ }, (args) => {
-              if (
-                args.importer.includes("@namada/sdk-multicore/wasm/src/sdk")
-              ) {
+            build.onResolve(
+              { filter: /@namada\/sdk-multicore\/wasm\/src\/sdk"/ },
+              (args) => {
                 const importerDir = path.dirname(args.importer);
                 const absolutePath = path.resolve(importerDir, args.path);
 
@@ -36,9 +35,8 @@ export default defineConfig({
                 }
 
                 return { path: absolutePath, external: true };
-              }
-              return null;
-            });
+              },
+            );
           },
         },
       ],
