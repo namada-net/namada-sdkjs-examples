@@ -1,6 +1,7 @@
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import react from "@vitejs/plugin-react";
+import { sdkMulticoreWorkerHelpers } from "@namada/sdkjs-esbuild-plugin";
 
 export default defineConfig({
   server: {
@@ -12,16 +13,18 @@ export default defineConfig({
   plugins: [react(), nodePolyfills()],
   worker: {
     format: "es",
-    // rollupOptions: {
-    //   output: {
-    //     preserveModules: true,
-    //   },
-    // },
   },
   esbuild: {
     minifyIdentifiers: false,
   },
   optimizeDeps: {
-    exclude: ["workerHelpers.js"],
+    esbuildOptions: {
+      // Need to use the custom plugin to handle the SDK multicore worker helpers
+      plugins: [sdkMulticoreWorkerHelpers()],
+      // Node.js global to browser globalThis
+      define: {
+        global: "globalThis",
+      },
+    },
   },
 });
