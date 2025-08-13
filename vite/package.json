@@ -11,12 +11,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@namada/sdk-multicore": "file:namada-sdk-multicore-0.20.0.tgz",
-    "@namada/sdkjs-esbuild-plugin": "^1.0.0",
+    "@namada/sdk-multicore": "file:../../../Downloads/namada-sdk-test.tgz",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },
   "devDependencies": {
+    "@namada/vite-esbuild-plugin": "../../namada-sdkjs/packages/vite-esbuild-plugin",
     "@eslint/js": "^9.25.0",
     "@types/node": "^24.2.1",
     "@types/react": "^19.1.2",

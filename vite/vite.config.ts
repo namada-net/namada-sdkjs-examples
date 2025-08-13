@@ -1,7 +1,7 @@
 import { defineConfig } from "vite";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
 import react from "@vitejs/plugin-react";
-import { sdkMulticoreWorkerHelpers } from "@namada/sdkjs-esbuild-plugin";
+import { sdkMulticoreWorkerHelpers } from "@namada/vite-esbuild-plugin";
 
 export default defineConfig({
   server: {
