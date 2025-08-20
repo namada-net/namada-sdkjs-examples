@@ -1,4 +1,4 @@
-import { initSdk, WrapperTxProps } from "@namada/sdk-multicore";
+import { BondProps, initSdk, WrapperTxProps } from "@namada/sdk";
 import BigNumber from "bignumber.js";
 
 import {
@@ -20,20 +20,19 @@ export const submitBond = async (): Promise<void> => {
     publicKey:
       "tpknam1qzz3nvg5zjwdpk5z0x9ngkf7guv9qpqrtz0da7weenwl5766pkkgvvt689t",
   };
-  // const bondProps: BondProps = {
-  //   // Update this to a valid source that has balance
-  //   source: "tnam1qqshvryx9pngpk7mmzpzkjkm6klelgusuvmkc0uz",
-  //   // Update this to a valid validator address
-  //   validator: "tnam1qz4sdx5jlh909j44uz46pf29ty0ztftfzc98s8dx",
-  //   amount: BigNumber(100),
-  // };
+  const bondProps: BondProps = {
+    // Update this to a valid source that has balance
+    source: "tnam1qqshvryx9pngpk7mmzpzkjkm6klelgusuvmkc0uz",
+    // Update this to a valid validator address
+    validator: "tnam1qz4sdx5jlh909j44uz46pf29ty0ztftfzc98s8dx",
+    amount: BigNumber(100),
+  };
 
   try {
     const sdk = await initSdk({
       rpcUrl,
       token,
       maspIndexerUrl,
-      // multicore: true,
     });
     const { rpc } = sdk;
     console.log(await rpc.queryNativeToken());
@@ -41,36 +40,34 @@ export const submitBond = async (): Promise<void> => {
     const revealPkTx = await sdk.tx.buildRevealPk(wrapperTxProps);
     console.log("Build RevealPK", { revealPkTx });
     const signedRevealPkTx = await sdk.signing.sign(revealPkTx, signingKey);
-    // const bondTx = await sdk.tx.buildBond(wrapperTxProps, bondProps);
-    // const signedBondTx = await sdk.signing.sign(bondTx, signingKey);
+    const bondTx = await sdk.tx.buildBond(wrapperTxProps, bondProps);
+    const signedBondTx = await sdk.signing.sign(bondTx, signingKey);
 
     console.log("Signed RevealPK", { signedRevealPkTx });
 
     // Reveal the public key on chain if it hasn't previously been used
     const revealPkResponse = await sdk.rpc.broadcastTx(signedRevealPkTx);
     console.log({ revealPkResponse });
-    // const bondTxResponse = await sdk.rpc.broadcastTx(
-    //   signedBondTx,
-    //   wrapperTxProps,
-    // );
-    //
-    // console.log(
-    //   `Result of broadcasting RevealPK Tx for ${wrapperTxProps.publicKey}`,
-    //   revealPkResponse,
-    // );
-    // console.log(
-    //   `Result of broadcasting Bond Tx ${bondTx.hash}`,
-    //   bondTxResponse,
-    // );
-    //
-    // const balance = await sdk.rpc.queryBalance(
-    //   "tnam1qz4sdx5jlh909j44uz46pf29ty0ztftfzc98s8dx",
-    //   [token],
-    //   chainId,
-    // );
-    // console.log("Balance:", balance);
+    const bondTxResponse = await sdk.rpc.broadcastTx(signedBondTx);
+
+    console.log(
+      `Result of broadcasting RevealPK Tx for ${wrapperTxProps.publicKey}`,
+      revealPkResponse,
+    );
+    console.log(
+      `Result of broadcasting Bond Tx ${bondTx.hash}`,
+      bondTxResponse,
+    );
+
+    const balance = await sdk.rpc.queryBalance(
+      "tnam1qz4sdx5jlh909j44uz46pf29ty0ztftfzc98s8dx",
+      [token],
+      chainId,
+    );
+    console.log("Balance:", balance);
   } catch (error) {
-    console.error("Error:", error);
+    console.warn("WARN:", error);
+    console.warn("WARN: Update values in `consts.ts` with valid accounts");
   }
 };
 

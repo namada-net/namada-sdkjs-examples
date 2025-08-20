@@ -2,6 +2,16 @@ const path = require("path");
 const webpack = require("webpack");
 
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
+
+const copyPatterns = [
+  // This is important for dynamic import! The default `initSdk` expects
+  // this file to be accessible via fetch:
+  {
+    from: "./node_modules/@namada/sdk/dist/sdk.namada.wasm",
+    to: "./sdk.namada.wasm",
+  },
+];
 
 module.exports = {
   target: "web",
@@ -56,9 +66,13 @@ module.exports = {
         env: {},
       },
     }),
+    new CopyPlugin({
+      patterns: copyPatterns,
+    }),
   ],
-  stats: {
-    // We want to ignore wasm-bindgen-rayon circular dependency warning
-    warningsFilter: [/dependency between chunks.+wasm-bindgen-rayon/],
-  },
+  // If using multicore SDK, enable the following:
+  // stats: {
+  //   // We want to ignore wasm-bindgen-rayon circular dependency warning
+  //   warningsFilter: [/dependency between chunks.+wasm-bindgen-rayon/],
+  // },
 };
