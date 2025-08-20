@@ -1,23 +1,21 @@
-import { getSdk } from "@namada/sdk/web";
-import init from "@namada/sdk/web-init";
-import { BondProps, WrapperTxProps } from "@namada/types";
+import { BondProps, initSdk, WrapperTxProps } from "@namada/sdk";
 import BigNumber from "bignumber.js";
 
 import {
-  NODE_URL,
-  NATIVE_TOKEN,
-  SIGNING_KEY,
-  CHAIN_ID,
-  STORAGE_PATH,
-  MASP_URL,
+  NODE_URL as rpcUrl,
+  NATIVE_TOKEN as token,
+  SIGNING_KEY as signingKey,
+  CHAIN_ID as chainId,
+  STORAGE_PATH as dbName,
+  MASP_URL as maspIndexerUrl,
 } from "./config";
 
 export const submitBond = async (): Promise<void> => {
   const wrapperTxProps: WrapperTxProps = {
-    token: NATIVE_TOKEN,
-    feeAmount: BigNumber(5),
-    gasLimit: BigNumber(20_000),
-    chainId: CHAIN_ID,
+    token,
+    feeAmount: BigNumber(500),
+    gasLimit: BigNumber(1000),
+    chainId: chainId,
     // Update this to a valid public key
     publicKey:
       "tpknam1qzz3nvg5zjwdpk5z0x9ngkf7guv9qpqrtz0da7weenwl5766pkkgvvt689t",
@@ -31,30 +29,26 @@ export const submitBond = async (): Promise<void> => {
   };
 
   try {
-    const { cryptoMemory } = await init();
-
-    const sdk = getSdk(
-      cryptoMemory,
-      NODE_URL,
-      MASP_URL,
-      STORAGE_PATH,
-      NATIVE_TOKEN,
-    );
-
+    const sdk = await initSdk({
+      rpcUrl,
+      token,
+      maspIndexerUrl,
+    });
+    const { rpc } = sdk;
+    console.log(await rpc.queryNativeToken());
+    console.log("Initialized SDK!", { sdk });
     const revealPkTx = await sdk.tx.buildRevealPk(wrapperTxProps);
-    const signedRevealPkTx = await sdk.signing.sign(revealPkTx, SIGNING_KEY);
+    console.log("Build RevealPK", { revealPkTx });
+    const signedRevealPkTx = await sdk.signing.sign(revealPkTx, signingKey);
     const bondTx = await sdk.tx.buildBond(wrapperTxProps, bondProps);
-    const signedBondTx = await sdk.signing.sign(bondTx, SIGNING_KEY);
+    const signedBondTx = await sdk.signing.sign(bondTx, signingKey);
+
+    console.log("Signed RevealPK", { signedRevealPkTx });
 
     // Reveal the public key on chain if it hasn't previously been used
-    const revealPkResponse = await sdk.rpc.broadcastTx(
-      signedRevealPkTx,
-      wrapperTxProps,
-    );
-    const bondTxResponse = await sdk.rpc.broadcastTx(
-      signedBondTx,
-      wrapperTxProps,
-    );
+    const revealPkResponse = await sdk.rpc.broadcastTx(signedRevealPkTx);
+    console.log({ revealPkResponse });
+    const bondTxResponse = await sdk.rpc.broadcastTx(signedBondTx);
 
     console.log(
       `Result of broadcasting RevealPK Tx for ${wrapperTxProps.publicKey}`,
@@ -67,12 +61,13 @@ export const submitBond = async (): Promise<void> => {
 
     const balance = await sdk.rpc.queryBalance(
       "tnam1qz4sdx5jlh909j44uz46pf29ty0ztftfzc98s8dx",
-      [NATIVE_TOKEN],
-      CHAIN_ID,
+      [token],
+      chainId,
     );
     console.log("Balance:", balance);
   } catch (error) {
-    console.error("Error:", error);
+    console.warn("WARN:", error);
+    console.warn("WARN: Update values in `consts.ts` with valid accounts");
   }
 };
 

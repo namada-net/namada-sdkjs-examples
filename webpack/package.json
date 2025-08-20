@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "test:web": "webpack serve --config webpack.config.js"
+    "dev": "webpack serve --config webpack.config.js"
   },
   "devDependencies": {
     "@types/node": "^20.11.26",
@@ -19,8 +19,7 @@
     "webpack-dev-server": "^5.0.3"
   },
   "dependencies": {
-    "@namada/sdk": "^0.14.0",
-    "@namada/types": "^0.3.0",
+    "@namada/sdk": "^0.20.5",
     "buffer": "^6.0.3",
     "typescript": "^5.6.3"
   }
