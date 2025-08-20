@@ -9,3 +9,9 @@ See the following example projects and follow setup instructions:
 - [Vite (Multicore)](./vite-multicore/)
 - [Webpack](./webpack/)
 - [NodeJS](./node/)
+
+## Documentation
+
+The `@namada/sdk`, `@namada/sdk-multicore`, and `@namada/sdk-node` packages all share a common lib, with type docs available at:
+
+<https://github.com/namada-net/namada-sdkjs/blob/main/docs/modules.md>
