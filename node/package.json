@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/namada-net/namada-sdkjs-examples#readme",
   "dependencies": {
-    "@namada/sdk-node": "^0.20.7"
+    "@namada/sdk-node": "^0.23.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
